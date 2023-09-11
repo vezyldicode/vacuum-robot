@@ -93,6 +93,25 @@ void forwardRight()     // TIEN LEN BEN PHAI
   digitalWrite(IND, LOW);
 }
 
+void checkLeft()
+{
+  analogWrite(ENA, speed-100);
+  analogWrite(ENB, speed);
+  digitalWrite(INA, HIGH); 
+  digitalWrite(INB, LOW);  
+  digitalWrite(INC, HIGH); 
+  digitalWrite(IND, LOW); 
+}
+
+void checkRight()
+{
+  analogWrite(ENA, speed);
+  analogWrite(ENB, speed-100);
+  digitalWrite(INA, HIGH); 
+  digitalWrite(INB, LOW);  
+  digitalWrite(INC, HIGH); 
+  digitalWrite(IND, LOW); 
+}
 void left()    // RE TRAI                                                                              
 {
   Serial.println("DI CHUYEN SANG TRAI");
@@ -207,13 +226,12 @@ void delayluiphai()
     delay(100);
 }
 
-
 void delaytrai()   // RE TRAI TRONG 500MS
 {
   turnright = true;
   Serial.println("RE TRAI TRONG 500MS");
   unsigned long starttime=millis();
-  while(millis()-starttime<=900 && giatriL !=1 && giatriT == 1 && giatriM != 1 && giatriR != 1 && giatriP ==1) // DO ROI TRAI VA VA CHAM TRAI    
+  while(millis()-starttime<=400 && giatriL !=1 && giatriT == 1 && giatriM != 1 && giatriR != 1 && giatriP ==1) // DO ROI TRAI VA VA CHAM TRAI    
   {
     left();
     docgiatricambien();
@@ -223,11 +241,24 @@ void delaytrai()   // RE TRAI TRONG 500MS
       turnright = false;
     }
   }
-  if(millis()-starttime>=900 || giatriL ==1 || giatriT != HIGH || giatriM == 1 || giatriR != 1 || giatriP !=1 )
+  if(millis()-starttime>=400 || giatriL ==1 || giatriT != HIGH || giatriM == 1 || giatriR != 1 || giatriP !=1 )
   {
     stop();
     delay(500);
 }
+docgiatricambien();
+}
+
+void delaychecktrai()   // RE TRAI TRONG 500MS
+{
+  Serial.println("RE TRAI TRONG 500MS");
+  unsigned long starttime=millis();
+  while(millis()-starttime<=600 && giatriL !=1 && giatriT == 1 && giatriM != 1 && giatriR != 1 && giatriP ==1) // DO ROI TRAI VA VA CHAM TRAI    
+  {
+    checkLeft();
+    docgiatricambien();
+    Serial.println(starttime);
+  }
 docgiatricambien();
 }
 
@@ -236,7 +267,7 @@ void delayphai()    // RE PHAI TRONG 500MS
   turnright = false;
   Serial.println("RE PHAI TRONG 500MS");
   unsigned long starttime=millis();
-  while (millis()-starttime<=900 && giatriL !=1 && giatriT == 1 && giatriM != 1 && giatriR != 1 && giatriP ==1)
+  while (millis()-starttime<=400 && giatriL !=1 && giatriT == 1 && giatriM != 1 && giatriR != 1 && giatriP ==1)
   {
     right();
     docgiatricambien();
@@ -246,7 +277,7 @@ void delayphai()    // RE PHAI TRONG 500MS
       turnright = true;
     }
   }
-  if(millis()-starttime>=900 || giatriL ==1 || giatriT != HIGH || giatriM == 1 || giatriR != 1 || giatriP !=1)
+  if(millis()-starttime>=400 || giatriL ==1 || giatriT != HIGH || giatriM == 1 || giatriR != 1 || giatriP !=1)
   {
     stop();
     delay(500);
@@ -254,7 +285,20 @@ void delayphai()    // RE PHAI TRONG 500MS
 docgiatricambien();
 }
 
-void quay90phai()
+void delaycheckphai()    // RE PHAI TRONG 500MS
+{
+  Serial.println("RE PHAI TRONG 500MS");
+  unsigned long starttime=millis();
+  while (millis()-starttime<=600 && giatriL !=1 && giatriT == 1 && giatriM != 1 && giatriR != 1 && giatriP ==1)
+  {
+    checkRight();
+    docgiatricambien();
+    Serial.println(starttime);
+  }
+docgiatricambien();
+}
+
+void quay180phai()
 {
   turnright = false;
   Serial.println("RE PHAI TRONG 1500MS");
@@ -280,7 +324,7 @@ void quay90phai()
 docgiatricambien();
 }
 
-void quay90trai()
+void quay180trai()
 {
   
   Serial.println("RE TRAI TRONG 1500MS");
@@ -427,21 +471,23 @@ else if (giatriP == LOW && giatriT==LOW) // va cham o giua
   if (turnright == true)
   {
     delaylui();
-    quay90phai();
+    quay180phai();
     turnright = false;
   }
-  else {delaylui(); quay90trai(); turnright = true;}
+  else {delaylui(); quay180trai(); turnright = true;}
 }
 else if (giatriT == HIGH && giatriP==LOW) // va cham ben phai
   {
   
   Serial.println("phat hien va cham ben phai");
   delayluiphai();
+  delaycheckphai();
   }
 else if (giatriT == LOW && giatriP== HIGH) // va cham ben trai
 {
   Serial.println("phat hien va cham ben trai");
 
   delayluitrai();
+  delaychecktrai();
 }
 }
