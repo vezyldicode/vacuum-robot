@@ -55,6 +55,8 @@ void start()
   noTone(coi);
 }
 
+
+// BASIC MOVEMENT
 void forward()        //  DI THANG
 {
   Serial.println("Forward");
@@ -85,8 +87,6 @@ void forwardRight()     // TIEN LEN BEN PHAI
   Serial.println("");
   analogWrite(ENA,speed);
   analogWrite(ENB,speed);
-  analogWrite(ENA, speed);
-  analogWrite(ENB, speed);
   digitalWrite(INA, HIGH);
   digitalWrite(INB, LOW);  
   digitalWrite(INC, LOW);
@@ -141,6 +141,32 @@ void backward()   // LUI LAI
   digitalWrite(IND, HIGH);
 }
 
+void backwardRight()                                                                            // LUI LAI BEN PHAI
+{
+  Serial.println("Backward Right");
+  Serial.println("");
+  analogWrite(ENA,speed);
+  analogWrite(ENB,speed);
+  digitalWrite(INA, LOW);
+  digitalWrite(INB, HIGH);  
+  digitalWrite(INC, LOW);
+  digitalWrite(IND, LOW);
+}
+
+void backwardLeft()                                                                            // LUI LAI BEN TRAI
+{
+  Serial.println("Backward Left");
+  Serial.println("");
+  analogWrite(ENA,speed);
+  analogWrite(ENB,speed);
+  digitalWrite(INA, LOW);
+  digitalWrite(INB, LOW);  
+  digitalWrite(INC, LOW);
+  digitalWrite(IND, HIGH);
+}
+
+//COMPLICATED MOVEMENT
+
 void delaylui()   // LUI TRONG 300MS
 {
   Serial.println("LUI TRONG 300MS");
@@ -154,6 +180,33 @@ void delaylui()   // LUI TRONG 300MS
     delay(500);
     docgiatricambien();
 }
+
+void delayluitrai()
+{
+  unsigned long starttime=millis();
+  while(millis()-starttime<=200)   
+  {
+    backwardLeft();
+    
+    Serial.println(starttime);
+  }
+    docgiatricambien();
+    stop();
+    delay(100);
+}
+
+void delayluiphai()
+{
+  unsigned long starttime=millis();
+  while(millis()-starttime<=200)   
+  {
+    backwardRight();
+    docgiatricambien();
+    Serial.println(starttime);}
+    stop();
+    delay(100);
+}
+
 
 void delaytrai()   // RE TRAI TRONG 500MS
 {
@@ -172,8 +225,6 @@ void delaytrai()   // RE TRAI TRONG 500MS
   }
   if(millis()-starttime>=900 || giatriL ==1 || giatriT != HIGH || giatriM == 1 || giatriR != 1 || giatriP !=1 )
   {
-    Serial.println("Phat hien vat can trai");
-    delaylui();
     stop();
     delay(500);
 }
@@ -197,7 +248,6 @@ void delayphai()    // RE PHAI TRONG 500MS
   }
   if(millis()-starttime>=900 || giatriL ==1 || giatriT != HIGH || giatriM == 1 || giatriR != 1 || giatriP !=1)
   {
-    delaylui();
     stop();
     delay(500);
 }
@@ -209,19 +259,20 @@ void quay90phai()
   turnright = false;
   Serial.println("RE PHAI TRONG 1500MS");
   unsigned long starttime=millis();
-  while (millis()-starttime<=4600 && giatriL !=1 && giatriT == 1 && giatriM != 1 && giatriR != 1 && giatriP ==1)
+  while (millis()-starttime<=3000 && giatriL !=1 && giatriT == 1 && giatriM != 1 && giatriR != 1 && giatriP ==1)
   {
     forwardRight();
     docgiatricambien();
     Serial.println(starttime);
-    if (giatriL ==1 || giatriT != HIGH || giatriM == 1 || giatriR != 1 || giatriP !=1)
+    if (giatriL ==1 || giatriT != HIGH || giatriM == 1 || giatriR == 1 || giatriP !=1)
     {
       turnright = true;
+      delaylui();
+      delayphai();
     }
   }
-  if(millis()-starttime>=4600 || giatriL ==1 || giatriT != HIGH || giatriM == 1 || giatriR != 1 || giatriP !=1)
+  if(millis()-starttime>=3000 || giatriL ==1 || giatriT != HIGH || giatriM == 1 || giatriR == 1 || giatriP !=1)
   {
-    delaylui();
     stop();
     delay(500);
     
@@ -234,25 +285,27 @@ void quay90trai()
   
   Serial.println("RE TRAI TRONG 1500MS");
   unsigned long starttime=millis();
-  while (millis()-starttime<=4600 && giatriL !=1 && giatriT == 1 && giatriM != 1 && giatriR != 1 && giatriP ==1)
+  while (millis()-starttime<=3000 && giatriL !=1 && giatriT == 1 && giatriM != 1 && giatriR != 1 && giatriP ==1)
   {
     forwardLeft();
     docgiatricambien();
     Serial.println(starttime);
-    if ( giatriL ==1 || giatriT != HIGH || giatriM == 1 || giatriR != 1 || giatriP !=1  )
+    if ( giatriL ==1 || giatriT != HIGH || giatriM == 1 || giatriR == 1 || giatriP !=1  )
     {
+      delaylui();
+      delaytrai();
       turnright = false;
     }
   }
-  if(millis()-starttime>=4600 || giatriL ==1 || giatriT != HIGH || giatriM == 1 || giatriR != 1 || giatriP !=1  )
+  if(millis()-starttime>=3000 || giatriL ==1 || giatriT != HIGH || giatriM == 1 || giatriR == 1 || giatriP !=1  )
   {
-    delaylui();
     stop();
     delay(500);
   }
   docgiatricambien();
 }
 
+//SOUND TRACK
 void errorsound()
 {
   tone(coi, 1900);
@@ -291,7 +344,6 @@ void setup()
 }
 void loop()
 {
-Serial.println("---------------------------------------------------------------------------------------------------------");
 docgiatricambien();
 
 if (giatriT == HIGH && giatriP==HIGH) // khong va cham
@@ -384,25 +436,12 @@ else if (giatriT == HIGH && giatriP==LOW) // va cham ben phai
   {
   
   Serial.println("phat hien va cham ben phai");
-  if (previous == false)
-  {
-  delaylui(); delayphai();
-    previous = true;
-  }
-  else {delaylui(); delaytrai();}
-
+  delayluiphai();
   }
 else if (giatriT == LOW && giatriP== HIGH) // va cham ben trai
 {
   Serial.println("phat hien va cham ben trai");
 
-  if (previous == true)
-  {
-    delaylui();
-    delaytrai();
-    previous = false;
-  }
-  else if (previous == false) {delaylui(); delayphai();}
-
+  delayluitrai();
 }
 }
