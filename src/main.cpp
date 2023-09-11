@@ -112,6 +112,7 @@ void checkRight()
   digitalWrite(INC, HIGH); 
   digitalWrite(IND, LOW); 
 }
+
 void left()    // RE TRAI                                                                              
 {
   Serial.println("DI CHUYEN SANG TRAI");
@@ -253,7 +254,7 @@ void delaychecktrai()   // RE TRAI TRONG 500MS
 {
   Serial.println("RE TRAI TRONG 500MS");
   unsigned long starttime=millis();
-  while(millis()-starttime<=600 && giatriL !=1 && giatriT == 1 && giatriM != 1 && giatriR != 1 && giatriP ==1) // DO ROI TRAI VA VA CHAM TRAI    
+  while(millis()-starttime<=1000 && giatriL !=1 && giatriT == 1 && giatriM != 1 && giatriR != 1 && giatriP ==1) // DO ROI TRAI VA VA CHAM TRAI    
   {
     checkLeft();
     docgiatricambien();
@@ -289,7 +290,7 @@ void delaycheckphai()    // RE PHAI TRONG 500MS
 {
   Serial.println("RE PHAI TRONG 500MS");
   unsigned long starttime=millis();
-  while (millis()-starttime<=600 && giatriL !=1 && giatriT == 1 && giatriM != 1 && giatriR != 1 && giatriP ==1)
+  while (millis()-starttime<=1000 && giatriL !=1 && giatriT == 1 && giatriM != 1 && giatriR != 1 && giatriP ==1)
   {
     checkRight();
     docgiatricambien();
@@ -311,14 +312,13 @@ void quay180phai()
     if (giatriL ==1 || giatriT != HIGH || giatriM == 1 || giatriR == 1 || giatriP !=1)
     {
       turnright = true;
-      delaylui();
-      delayphai();
+      delayluitrai();
     }
   }
   if(millis()-starttime>=3000 || giatriL ==1 || giatriT != HIGH || giatriM == 1 || giatriR == 1 || giatriP !=1)
   {
     stop();
-    delay(500);
+    delay(100);
     
 }
 docgiatricambien();
@@ -336,15 +336,13 @@ void quay180trai()
     Serial.println(starttime);
     if ( giatriL ==1 || giatriT != HIGH || giatriM == 1 || giatriR == 1 || giatriP !=1  )
     {
-      delaylui();
-      delaytrai();
-      turnright = false;
+      delayluiphai();
     }
   }
   if(millis()-starttime>=3000 || giatriL ==1 || giatriT != HIGH || giatriM == 1 || giatriR == 1 || giatriP !=1  )
   {
     stop();
-    delay(500);
+    delay(100);
   }
   docgiatricambien();
 }
