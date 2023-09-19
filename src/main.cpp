@@ -14,15 +14,15 @@ int speed = 255;
 int cbroitrai = 8;
 int cbroigiua = 9;
 int cbroiphai = 10;
-int giatriL; // gia tri cam bien trai (GIA TRI ==0(LOW) KHI ROBOT TREN MAT DAT)
-int giatriM; // gia tri cam bien giua (GIA TRI ==0(LOW) KHI ROBOT TREN MAT DAT)
-int giatriR; // gia tri cam bien phai (GIA TRI ==0(LOW) KHI ROBOT TREN MAT DAT)
+int valueL; // gia tri cam bien trai (GIA TRI ==0(LOW) KHI ROBOT TREN MAT DAT)
+int valueM; // gia tri cam bien giua (GIA TRI ==0(LOW) KHI ROBOT TREN MAT DAT)
+int valueR; // gia tri cam bien phai (GIA TRI ==0(LOW) KHI ROBOT TREN MAT DAT)
 
 //cam bien va cham
 const int cbphai = 13; // cam bien va cham phai
 const int cbtrai = 12; // cam bien va cham trai
-int giatriT; // gia tri cam bien va cham trai (GIA TRI ==1(HIGH) KHI ROBOT KHONG VA CHAM)
-int giatriP; // gia tri cam bien va cham phai (GIA TRI ==1(HIGH) KHI ROBOT KHONG VA CHAM)
+int valueT; // gia tri cam bien va cham trai (GIA TRI ==1(HIGH) KHI ROBOT KHONG VA CHAM)
+int valueP; // gia tri cam bien va cham phai (GIA TRI ==1(HIGH) KHI ROBOT KHONG VA CHAM)
 
 boolean turnright = true; //
 boolean error = true;
@@ -30,17 +30,17 @@ boolean previous;
 
 void readsensorvalue()
 {
-  giatriL = digitalRead(cbroitrai);
+  valueL = digitalRead(cbroitrai);
   Serial.print("gia tri cam bien roi ben trai la:");
-  Serial.println(giatriL);
-  giatriM = digitalRead(cbroigiua);
+  Serial.println(valueL);
+  valueM = digitalRead(cbroigiua);
   Serial.print("gia tri cam bien roi o giua la:");
-  Serial.println(giatriM);
-  giatriR = digitalRead(cbroiphai);
+  Serial.println(valueM);
+  valueR = digitalRead(cbroiphai);
   Serial.print("gia tri cam bien roi ben phai la:");
-  Serial.println(giatriR);
-  giatriT = digitalRead(cbtrai);
-  giatriP = digitalRead(cbphai);
+  Serial.println(valueR);
+  valueT = digitalRead(cbtrai);
+  valueP = digitalRead(cbphai);
 
 }
 
@@ -177,7 +177,7 @@ void backwardLeft()                                                             
 
 //COMPLICATED MOVEMENT
 
-void delaylui()   // LUI TRONG 300MS
+void delaybackward()   // LUI TRONG 300MS
 {
   Serial.println("LUI TRONG 300MS");
   unsigned long starttime=millis();
@@ -191,7 +191,7 @@ void delaylui()   // LUI TRONG 300MS
     readsensorvalue();
 }
 
-void delayluitrai()
+void delaybackwardLeft()
 {
   unsigned long starttime=millis();
   while(millis()-starttime<=200)   
@@ -205,7 +205,7 @@ void delayluitrai()
     delay(100);
 }
 
-void delayluiphai()
+void delaybackwardRight()
 {
   unsigned long starttime=millis();
   while(millis()-starttime<=200)   
@@ -222,17 +222,17 @@ void delaytrai()   // RE TRAI TRONG 500MS
   turnright = true;
   Serial.println("RE TRAI TRONG 500MS");
   unsigned long starttime=millis();
-  while(millis()-starttime<=400 && giatriL !=1 && giatriT == 1 && giatriM != 1 && giatriR != 1 && giatriP ==1) // DO ROI TRAI VA VA CHAM TRAI    
+  while(millis()-starttime<=400 && valueL !=1 && valueT == 1 && valueM != 1 && valueR != 1 && valueP ==1) // DO ROI TRAI VA VA CHAM TRAI    
   {
     left();
     readsensorvalue();
     Serial.println(starttime);
-    if ( giatriL ==1 || giatriT != HIGH || giatriM == 1 || giatriR != 1 || giatriP !=1 )
+    if ( valueL ==1 || valueT != HIGH || valueM == 1 || valueR != 1 || valueP !=1 )
     {
       turnright = false;
     }
   }
-  if(millis()-starttime>=400 || giatriL ==1 || giatriT != HIGH || giatriM == 1 || giatriR != 1 || giatriP !=1 )
+  if(millis()-starttime>=400 || valueL ==1 || valueT != HIGH || valueM == 1 || valueR != 1 || valueP !=1 )
   {
     stop();
     delay(500);
@@ -244,7 +244,7 @@ void delaychecktrai()   // RE TRAI TRONG 500MS
 {
   Serial.println("RE TRAI TRONG 500MS");
   unsigned long starttime=millis();
-  while(millis()-starttime<=1000 && giatriL !=1 && giatriT == 1 && giatriM != 1 && giatriR != 1 && giatriP ==1) // DO ROI TRAI VA VA CHAM TRAI    
+  while(millis()-starttime<=1000 && valueL !=1 && valueT == 1 && valueM != 1 && valueR != 1 && valueP ==1) // DO ROI TRAI VA VA CHAM TRAI    
   {
     checkLeft();
     readsensorvalue();
@@ -258,17 +258,17 @@ void delayphai()    // RE PHAI TRONG 500MS
   turnright = false;
   Serial.println("RE PHAI TRONG 500MS");
   unsigned long starttime=millis();
-  while (millis()-starttime<=400 && giatriL !=1 && giatriT == 1 && giatriM != 1 && giatriR != 1 && giatriP ==1)
+  while (millis()-starttime<=400 && valueL !=1 && valueT == 1 && valueM != 1 && valueR != 1 && valueP ==1)
   {
     right();
     readsensorvalue();
     Serial.println(starttime);
-    if (giatriL ==1 || giatriT != HIGH || giatriM == 1 || giatriR != 1 || giatriP !=1)
+    if (valueL ==1 || valueT != HIGH || valueM == 1 || valueR != 1 || valueP !=1)
     {
       turnright = true;
     }
   }
-  if(millis()-starttime>=400 || giatriL ==1 || giatriT != HIGH || giatriM == 1 || giatriR != 1 || giatriP !=1)
+  if(millis()-starttime>=400 || valueL ==1 || valueT != HIGH || valueM == 1 || valueR != 1 || valueP !=1)
   {
     stop();
     delay(500);
@@ -280,7 +280,7 @@ void delaycheckphai()    // RE PHAI TRONG 500MS
 {
   Serial.println("RE PHAI TRONG 500MS");
   unsigned long starttime=millis();
-  while (millis()-starttime<=1000 && giatriL !=1 && giatriT == 1 && giatriM != 1 && giatriR != 1 && giatriP ==1)
+  while (millis()-starttime<=1000 && valueL !=1 && valueT == 1 && valueM != 1 && valueR != 1 && valueP ==1)
   {
     checkRight();
     readsensorvalue();
@@ -289,23 +289,23 @@ void delaycheckphai()    // RE PHAI TRONG 500MS
 readsensorvalue();
 }
 
-void quay180phai()
+void rotateRight()
 {
   turnright = false;
   Serial.println("RE PHAI TRONG 1500MS");
   unsigned long starttime=millis();
-  while (millis()-starttime<=3000 && giatriL !=1 && giatriT == 1 && giatriM != 1 && giatriR != 1 && giatriP ==1)
+  while (millis()-starttime<=3000 && valueL !=1 && valueT == 1 && valueM != 1 && valueR != 1 && valueP ==1)
   {
     forwardRight();
     readsensorvalue();
     Serial.println(starttime);
-    if (giatriL ==1 || giatriT != HIGH || giatriM == 1 || giatriR == 1 || giatriP !=1)
+    if (valueL ==1 || valueT != HIGH || valueM == 1 || valueR == 1 || valueP !=1)
     {
       turnright = true;
-      delayluitrai();
+      delaybackwardLeft();
     }
   }
-  if(millis()-starttime>=3000 || giatriL ==1 || giatriT != HIGH || giatriM == 1 || giatriR == 1 || giatriP !=1)
+  if(millis()-starttime>=3000 || valueL ==1 || valueT != HIGH || valueM == 1 || valueR == 1 || valueP !=1)
   {
     stop();
     delay(100);
@@ -314,22 +314,22 @@ void quay180phai()
 readsensorvalue();
 }
 
-void quay180trai()
+void rotateLeft()
 {
   
   Serial.println("RE TRAI TRONG 1500MS");
   unsigned long starttime=millis();
-  while (millis()-starttime<=3000 && giatriL !=1 && giatriT == 1 && giatriM != 1 && giatriR != 1 && giatriP ==1)
+  while (millis()-starttime<=3000 && valueL !=1 && valueT == 1 && valueM != 1 && valueR != 1 && valueP ==1)
   {
     forwardLeft();
     readsensorvalue();
     Serial.println(starttime);
-    if ( giatriL ==1 || giatriT != HIGH || giatriM == 1 || giatriR == 1 || giatriP !=1  )
+    if ( valueL ==1 || valueT != HIGH || valueM == 1 || valueR == 1 || valueP !=1  )
     {
-      delayluiphai();
+      delaybackwardRight();
     }
   }
-  if(millis()-starttime>=3000 || giatriL ==1 || giatriT != HIGH || giatriM == 1 || giatriR == 1 || giatriP !=1  )
+  if(millis()-starttime>=3000 || valueL ==1 || valueT != HIGH || valueM == 1 || valueR == 1 || valueP !=1  )
   {
     stop();
     delay(100);
@@ -390,9 +390,9 @@ void loop()
 {
 readsensorvalue();
 
-if (giatriT == HIGH && giatriP==HIGH) // khong va cham
+if (valueT == HIGH && valueP==HIGH) // khong va cham
 { 
-  if (giatriL !=0 && giatriM !=0 && giatriR != 0)  //robot khong nam tren mat dat
+  if (valueL !=0 && valueM !=0 && valueR != 0)  //robot khong nam tren mat dat
   {
     stop();
     if (error == true)
@@ -400,93 +400,93 @@ if (giatriT == HIGH && giatriP==HIGH) // khong va cham
       errorsound();
     }
   }
-  else if (giatriL ==0 && giatriM ==0 && giatriR == 0)
+  else if (valueL ==0 && valueM ==0 && valueR == 0)
   {
     forward();
     error = true;
   }
-  else if (giatriL !=0 && giatriM !=0 && giatriR == 0 ) // ben trai va o giua roi
+  else if (valueL !=0 && valueM !=0 && valueR == 0 ) // ben trai va o giua roi
   {  if (turnright == true)
     {
-      delaylui();
+      delaybackward();
       delayphai();
     }
-    else {delaylui(); delaytrai();}
+    else {delaybackward(); delaytrai();}
     //Serial.println("het chuong trinh 1-1-0");
   }
-  else if (giatriL ==0 && giatriM !=0 && giatriR == 0 ) // o giua roi
+  else if (valueL ==0 && valueM !=0 && valueR == 0 ) // o giua roi
   {
     
-    delaylui();
+    delaybackward();
     delayphai();
     //Serial.println("het chuong trinh 0-1-0");
   }
-  else if ( giatriL !=0 && giatriM ==0 && giatriR == 0) // ben trai roi
+  else if ( valueL !=0 && valueM ==0 && valueR == 0) // ben trai roi
   {
 
     if (turnright == true)
     {
-      delaylui();
+      delaybackward();
       delayphai();
     }
-    else {delaylui(); delaytrai();}
+    else {delaybackward(); delaytrai();}
     //Serial.println("het chuong trinh 1-0-0");
   }
-  else if ( giatriL !=0 && giatriM ==0 && giatriR != 0) // ben trai va phai roi
+  else if ( valueL !=0 && valueM ==0 && valueR != 0) // ben trai va phai roi
   {
     
-    delaylui();
+    delaybackward();
     delayphai();
     //Serial.println("het chuong trinh 1-0-1");
   }
-  else if (giatriL ==0 && giatriM ==0 && giatriR != 0 ) // ben phai roi
+  else if (valueL ==0 && valueM ==0 && valueR != 0 ) // ben phai roi
   {
     
     if (turnright == true)
     {
-      delaylui();
+      delaybackward();
       delayphai();
     }
-    else {delaylui(); delaytrai();}
+    else {delaybackward(); delaytrai();}
     //Serial.println("het chuong trinh 0-0-1");
   }
-  else if (giatriL ==0 && giatriM !=0 && giatriR != 0 ) // ben phai o giua roi
+  else if (valueL ==0 && valueM !=0 && valueR != 0 ) // ben phai o giua roi
   
   {
     if (turnright == true)
     {
-      delaylui();
+      delaybackward();
       delayphai();
     }
-    else {delaylui(); delaytrai();}
+    else {delaybackward(); delaytrai();}
     //Serial.println("het chuong trinh 0-1-1");
   }
   else {
   readsensorvalue();
   }
 }
-else if (giatriP == LOW && giatriT==LOW) // va cham o giua
+else if (valueP == LOW && valueT==LOW) // va cham o giua
 {
   //Serial.println("phat hien va cham o giua");
   if (turnright == true)
   {
-    delaylui();
-    quay180phai();
+    delaybackward();
+    rotateRight();
     turnright = false;
   }
-  else {delaylui(); quay180trai(); turnright = true;}
+  else {delaybackward(); rotateLeft(); turnright = true;}
 }
-else if (giatriT == HIGH && giatriP==LOW) // va cham ben phai
+else if (valueT == HIGH && valueP==LOW) // va cham ben phai
   {
   //Serial.println("phat hien va cham ben phai");
-  delayluiphai();
+  delaybackwardRight();
   delaycheckphai();
   }
-else if (giatriT == LOW && giatriP== HIGH) // va cham ben trai
+else if (valueT == LOW && valueP== HIGH) // va cham ben trai
 {
   //Serial.println("phat hien va cham ben trai");
 
-  delayluitrai();
+  delaybackwardLeft();
   delaychecktrai();
 }
 }
