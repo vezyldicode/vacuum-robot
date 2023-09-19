@@ -44,16 +44,6 @@ void readsensorvalue()
 
 }
 
-void start() 
-{
-  tone(coi, 1500);
-  delay (100);
-  noTone(coi);
-  delay(100);
-  tone(coi, 1900);
-  delay(100);
-  noTone(coi);
-}
 
 
 // BASIC MOVEMENT
@@ -360,6 +350,17 @@ void errorsound()
   error = false;
 }
 
+void startsound() 
+{
+  tone(coi, 1500);
+  delay (100);
+  noTone(coi);
+  delay(100);
+  tone(coi, 1900);
+  delay(100);
+  noTone(coi);
+}
+
 void setup()
 {
   { //3 cam bien roi
@@ -382,8 +383,9 @@ void setup()
   pinMode (coi, OUTPUT);
   stop();
   Serial.begin (9600);
-  start();
+  startsound();
 }
+
 void loop()
 {
 readsensorvalue();
@@ -410,14 +412,14 @@ if (giatriT == HIGH && giatriP==HIGH) // khong va cham
       delayphai();
     }
     else {delaylui(); delaytrai();}
-  Serial.println("het chuong trinh 1-1-0");
+    //Serial.println("het chuong trinh 1-1-0");
   }
   else if (giatriL ==0 && giatriM !=0 && giatriR == 0 ) // o giua roi
   {
     
     delaylui();
     delayphai();
-    Serial.println("het chuong trinh 0-1-0");
+    //Serial.println("het chuong trinh 0-1-0");
   }
   else if ( giatriL !=0 && giatriM ==0 && giatriR == 0) // ben trai roi
   {
@@ -428,14 +430,14 @@ if (giatriT == HIGH && giatriP==HIGH) // khong va cham
       delayphai();
     }
     else {delaylui(); delaytrai();}
-    Serial.println("het chuong trinh 1-0-0");
+    //Serial.println("het chuong trinh 1-0-0");
   }
   else if ( giatriL !=0 && giatriM ==0 && giatriR != 0) // ben trai va phai roi
   {
     
     delaylui();
     delayphai();
-    Serial.println("het chuong trinh 1-0-1");
+    //Serial.println("het chuong trinh 1-0-1");
   }
   else if (giatriL ==0 && giatriM ==0 && giatriR != 0 ) // ben phai roi
   {
@@ -446,7 +448,7 @@ if (giatriT == HIGH && giatriP==HIGH) // khong va cham
       delayphai();
     }
     else {delaylui(); delaytrai();}
-    Serial.println("het chuong trinh 0-0-1");
+    //Serial.println("het chuong trinh 0-0-1");
   }
   else if (giatriL ==0 && giatriM !=0 && giatriR != 0 ) // ben phai o giua roi
   
@@ -457,7 +459,7 @@ if (giatriT == HIGH && giatriP==HIGH) // khong va cham
       delayphai();
     }
     else {delaylui(); delaytrai();}
-    Serial.println("het chuong trinh 0-1-1");
+    //Serial.println("het chuong trinh 0-1-1");
   }
   else {
   readsensorvalue();
@@ -465,7 +467,7 @@ if (giatriT == HIGH && giatriP==HIGH) // khong va cham
 }
 else if (giatriP == LOW && giatriT==LOW) // va cham o giua
 {
-  Serial.println("phat hien va cham o giua");
+  //Serial.println("phat hien va cham o giua");
   if (turnright == true)
   {
     delaylui();
@@ -476,14 +478,13 @@ else if (giatriP == LOW && giatriT==LOW) // va cham o giua
 }
 else if (giatriT == HIGH && giatriP==LOW) // va cham ben phai
   {
-  
-  Serial.println("phat hien va cham ben phai");
+  //Serial.println("phat hien va cham ben phai");
   delayluiphai();
   delaycheckphai();
   }
 else if (giatriT == LOW && giatriP== HIGH) // va cham ben trai
 {
-  Serial.println("phat hien va cham ben trai");
+  //Serial.println("phat hien va cham ben trai");
 
   delayluitrai();
   delaychecktrai();
