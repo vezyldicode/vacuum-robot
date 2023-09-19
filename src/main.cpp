@@ -28,7 +28,7 @@ boolean turnright = true; //
 boolean error = true;
 boolean previous;
 
-void docgiatricambien()
+void readsensorvalue()
 {
   giatriL = digitalRead(cbroitrai);
   Serial.print("gia tri cam bien roi ben trai la:");
@@ -198,7 +198,7 @@ void delaylui()   // LUI TRONG 300MS
   }
     stop();
     delay(500);
-    docgiatricambien();
+    readsensorvalue();
 }
 
 void delayluitrai()
@@ -210,7 +210,7 @@ void delayluitrai()
     
     Serial.println(starttime);
   }
-    docgiatricambien();
+    readsensorvalue();
     stop();
     delay(100);
 }
@@ -221,7 +221,7 @@ void delayluiphai()
   while(millis()-starttime<=200)   
   {
     backwardRight();
-    docgiatricambien();
+    readsensorvalue();
     Serial.println(starttime);}
     stop();
     delay(100);
@@ -235,7 +235,7 @@ void delaytrai()   // RE TRAI TRONG 500MS
   while(millis()-starttime<=400 && giatriL !=1 && giatriT == 1 && giatriM != 1 && giatriR != 1 && giatriP ==1) // DO ROI TRAI VA VA CHAM TRAI    
   {
     left();
-    docgiatricambien();
+    readsensorvalue();
     Serial.println(starttime);
     if ( giatriL ==1 || giatriT != HIGH || giatriM == 1 || giatriR != 1 || giatriP !=1 )
     {
@@ -247,7 +247,7 @@ void delaytrai()   // RE TRAI TRONG 500MS
     stop();
     delay(500);
 }
-docgiatricambien();
+readsensorvalue();
 }
 
 void delaychecktrai()   // RE TRAI TRONG 500MS
@@ -257,10 +257,10 @@ void delaychecktrai()   // RE TRAI TRONG 500MS
   while(millis()-starttime<=1000 && giatriL !=1 && giatriT == 1 && giatriM != 1 && giatriR != 1 && giatriP ==1) // DO ROI TRAI VA VA CHAM TRAI    
   {
     checkLeft();
-    docgiatricambien();
+    readsensorvalue();
     Serial.println(starttime);
   }
-docgiatricambien();
+readsensorvalue();
 }
 
 void delayphai()    // RE PHAI TRONG 500MS
@@ -271,7 +271,7 @@ void delayphai()    // RE PHAI TRONG 500MS
   while (millis()-starttime<=400 && giatriL !=1 && giatriT == 1 && giatriM != 1 && giatriR != 1 && giatriP ==1)
   {
     right();
-    docgiatricambien();
+    readsensorvalue();
     Serial.println(starttime);
     if (giatriL ==1 || giatriT != HIGH || giatriM == 1 || giatriR != 1 || giatriP !=1)
     {
@@ -283,7 +283,7 @@ void delayphai()    // RE PHAI TRONG 500MS
     stop();
     delay(500);
 }
-docgiatricambien();
+readsensorvalue();
 }
 
 void delaycheckphai()    // RE PHAI TRONG 500MS
@@ -293,10 +293,10 @@ void delaycheckphai()    // RE PHAI TRONG 500MS
   while (millis()-starttime<=1000 && giatriL !=1 && giatriT == 1 && giatriM != 1 && giatriR != 1 && giatriP ==1)
   {
     checkRight();
-    docgiatricambien();
+    readsensorvalue();
     Serial.println(starttime);
   }
-docgiatricambien();
+readsensorvalue();
 }
 
 void quay180phai()
@@ -307,7 +307,7 @@ void quay180phai()
   while (millis()-starttime<=3000 && giatriL !=1 && giatriT == 1 && giatriM != 1 && giatriR != 1 && giatriP ==1)
   {
     forwardRight();
-    docgiatricambien();
+    readsensorvalue();
     Serial.println(starttime);
     if (giatriL ==1 || giatriT != HIGH || giatriM == 1 || giatriR == 1 || giatriP !=1)
     {
@@ -321,7 +321,7 @@ void quay180phai()
     delay(100);
     
 }
-docgiatricambien();
+readsensorvalue();
 }
 
 void quay180trai()
@@ -332,7 +332,7 @@ void quay180trai()
   while (millis()-starttime<=3000 && giatriL !=1 && giatriT == 1 && giatriM != 1 && giatriR != 1 && giatriP ==1)
   {
     forwardLeft();
-    docgiatricambien();
+    readsensorvalue();
     Serial.println(starttime);
     if ( giatriL ==1 || giatriT != HIGH || giatriM == 1 || giatriR == 1 || giatriP !=1  )
     {
@@ -344,7 +344,7 @@ void quay180trai()
     stop();
     delay(100);
   }
-  docgiatricambien();
+  readsensorvalue();
 }
 
 //SOUND TRACK
@@ -386,7 +386,7 @@ void setup()
 }
 void loop()
 {
-docgiatricambien();
+readsensorvalue();
 
 if (giatriT == HIGH && giatriP==HIGH) // khong va cham
 { 
@@ -460,7 +460,7 @@ if (giatriT == HIGH && giatriP==HIGH) // khong va cham
     Serial.println("het chuong trinh 0-1-1");
   }
   else {
-  docgiatricambien();
+  readsensorvalue();
   }
 }
 else if (giatriP == LOW && giatriT==LOW) // va cham o giua
