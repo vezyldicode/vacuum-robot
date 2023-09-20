@@ -1,6 +1,6 @@
 #include <Arduino.h>
 
-int coi = 2;
+int horn = 2;
 //L298N pins 
 const int ENA = 3; // dieu khien toc do motor trai;
 const int INA = 4; // chan am ben trai; // HIGH DE DI THANG
@@ -217,7 +217,7 @@ void delaybackwardRight()
     delay(100);
 }
 
-void delaytrai()   // RE TRAI TRONG 500MS
+void delayLeft()   // RE TRAI TRONG 500MS
 {
   turnright = true;
   Serial.println("RE TRAI TRONG 500MS");
@@ -253,7 +253,7 @@ void delaychecktrai()   // RE TRAI TRONG 500MS
 readsensorvalue();
 }
 
-void delayphai()    // RE PHAI TRONG 500MS
+void delayRight()    // RE PHAI TRONG 500MS
 {
   turnright = false;
   Serial.println("RE PHAI TRONG 500MS");
@@ -340,25 +340,25 @@ void rotateLeft()
 //SOUND TRACK
 void errorsound()
 {
-  tone(coi, 1900);
+  tone(horn, 1900);
   delay (500);
-  noTone(coi);
+  noTone(horn);
   delay(100);
-  tone(coi, 1900);
+  tone(horn, 1900);
   delay(500);
-  noTone(coi);
+  noTone(horn);
   error = false;
 }
 
-void startsound() 
+void startsound() .
 {
-  tone(coi, 1500);
+  tone(horn, 1500);
   delay (100);
-  noTone(coi);
+  noTone(horn);
   delay(100);
-  tone(coi, 1900);
+  tone(horn, 1900);
   delay(100);
-  noTone(coi);
+  noTone(horn);
 }
 
 void setup()
@@ -380,7 +380,7 @@ void setup()
   
   pinMode (cbphai, INPUT_PULLUP);
   pinMode (cbtrai, INPUT_PULLUP);
-  pinMode (coi, OUTPUT);
+  pinMode (horn, OUTPUT);
   stop();
   Serial.begin (9600);
   startsound();
@@ -409,16 +409,16 @@ if (valueT == HIGH && valueP==HIGH) // khong va cham
   {  if (turnright == true)
     {
       delaybackward();
-      delayphai();
+      delayRight();
     }
-    else {delaybackward(); delaytrai();}
+    else {delaybackward(); delayLeft();}
     //Serial.println("het chuong trinh 1-1-0");
   }
   else if (valueL ==0 && valueM !=0 && valueR == 0 ) // o giua roi
   {
     
     delaybackward();
-    delayphai();
+    delayRight();
     //Serial.println("het chuong trinh 0-1-0");
   }
   else if ( valueL !=0 && valueM ==0 && valueR == 0) // ben trai roi
@@ -427,16 +427,16 @@ if (valueT == HIGH && valueP==HIGH) // khong va cham
     if (turnright == true)
     {
       delaybackward();
-      delayphai();
+      delayRight();
     }
-    else {delaybackward(); delaytrai();}
+    else {delaybackward(); delayLeft();}
     //Serial.println("het chuong trinh 1-0-0");
   }
   else if ( valueL !=0 && valueM ==0 && valueR != 0) // ben trai va phai roi
   {
     
     delaybackward();
-    delayphai();
+    delayRight();
     //Serial.println("het chuong trinh 1-0-1");
   }
   else if (valueL ==0 && valueM ==0 && valueR != 0 ) // ben phai roi
@@ -445,9 +445,9 @@ if (valueT == HIGH && valueP==HIGH) // khong va cham
     if (turnright == true)
     {
       delaybackward();
-      delayphai();
+      delayRight();
     }
-    else {delaybackward(); delaytrai();}
+    else {delaybackward(); delayLeft();}
     //Serial.println("het chuong trinh 0-0-1");
   }
   else if (valueL ==0 && valueM !=0 && valueR != 0 ) // ben phai o giua roi
@@ -456,9 +456,9 @@ if (valueT == HIGH && valueP==HIGH) // khong va cham
     if (turnright == true)
     {
       delaybackward();
-      delayphai();
+      delayRight();
     }
-    else {delaybackward(); delaytrai();}
+    else {delaybackward(); delayLeft();}
     //Serial.println("het chuong trinh 0-1-1");
   }
   else {
