@@ -27,6 +27,7 @@ int valueP; // gia tri cam bien va cham phai (GIA TRI ==1(HIGH) KHI ROBOT KHONG 
 boolean turnright = true; //
 boolean error = true;
 boolean previous;
+boolean mode2 = false;
 
 void readsensorvalue()
 {
@@ -350,7 +351,7 @@ void errorsound()
   error = false;
 }
 
-void startsound() .
+void startsound()
 {
   tone(horn, 1500);
   delay (100);
@@ -361,6 +362,39 @@ void startsound() .
   noTone(horn);
 }
 
+void mode2sound ()
+{ 
+  tone(horn, 1500);
+  delay (100);
+  noTone(horn);
+  delay(100);
+  tone(horn, 1900);
+  delay(100);
+  noTone(horn);
+  delay(100);
+  tone(horn, 1500);
+  delay(100);
+  noTone(horn);
+  delay(100);
+  tone(horn, 1900);
+  delay(100);
+  noTone(horn);
+}
+
+//MODE
+void mode()
+{
+  while (mode2 ==true && valueL !=1 && valueT == 1 && valueM != 1 && valueR != 1 && valueP ==1)
+  {
+    forwardRight();
+    readsensorvalue();
+    if ( valueL ==1 || valueT != HIGH || valueM == 1 || valueR == 1 || valueP !=1  )
+    {
+      delaybackwardRight();
+      mode2 = false;
+    }
+  }
+}
 void setup()
 {
   { //3 cam bien roi
@@ -381,6 +415,7 @@ void setup()
   pinMode (cbphai, INPUT_PULLUP);
   pinMode (cbtrai, INPUT_PULLUP);
   pinMode (horn, OUTPUT);
+  mode2 = false;
   stop();
   Serial.begin (9600);
   startsound();
@@ -388,105 +423,119 @@ void setup()
 
 void loop()
 {
-readsensorvalue();
+  if (mode2 == true)
+  {
+    mode2sound();
+    mode();
+  }
+  else
+  {
+    readsensorvalue();
+    if (valueT == HIGH && valueP==HIGH) // khong va cham
+    { 
+      if (valueL !=0 && valueM !=0 && valueR != 0)  //robot khong nam tren mat dat
+      {
+        stop();
+        if (error == true)
+        {
+          errorsound();
+        }
+        if (valueT == LOW && valueP == LOW)
+        {
+          if (mode2 == false)
+          {
+          mode2 = true;
+          }
+          else mode2 = false;
+        }
+      }
+      else if (valueL ==0 && valueM ==0 && valueR == 0)
+      {
+        forward();
+        error = true;
+      }
+      else if (valueL !=0 && valueM !=0 && valueR == 0 ) // ben trai va o giua roi
+      {  if (turnright == true)
+        {
+          delaybackward();
+          delayRight();
+        }
+        else {delaybackward(); delayLeft();}
+        //Serial.println("het chuong trinh 1-1-0");
+      }
+      else if (valueL ==0 && valueM !=0 && valueR == 0 ) // o giua roi
+      {
+        
+        delaybackward();
+        delayRight();
+        //Serial.println("het chuong trinh 0-1-0");
+      }
+      else if ( valueL !=0 && valueM ==0 && valueR == 0) // ben trai roi
+      {
+        if (turnright == true)
+        {
+          delaybackward();
+          delayRight();
+        }
+        else {delaybackward(); delayLeft();}
+        //Serial.println("het chuong trinh 1-0-0");
+      }
+      else if ( valueL !=0 && valueM ==0 && valueR != 0) // ben trai va phai roi
+      {
+        
+        delaybackward();
+        delayRight();
+        //Serial.println("het chuong trinh 1-0-1");
+      }
+      else if (valueL ==0 && valueM ==0 && valueR != 0 ) // ben phai roi
+      {
+        
+        if (turnright == true)
+        {
+          delaybackward();
+          delayRight();
+        }
+        else {delaybackward(); delayLeft();}
+        //Serial.println("het chuong trinh 0-0-1");
+      }
+      else if (valueL ==0 && valueM !=0 && valueR != 0 ) // ben phai o giua roi
+      
+      {
+        if (turnright == true)
+        {
+          delaybackward();
+          delayRight();
+        }
+        else {delaybackward(); delayLeft();}
+        //Serial.println("het chuong trinh 0-1-1");
+      }
+      else {
+      readsensorvalue();
+      }
+    }
+    else if (valueP == LOW && valueT==LOW) // va cham o giua
+    {
+      //Serial.println("phat hien va cham o giua");
+      if (turnright == true)
+      {
+        delaybackward();
+        rotateRight();
+        turnright = false;
+      }
+      else {delaybackward(); rotateLeft(); turnright = true;}
+    }
+    else if (valueT == HIGH && valueP==LOW) // va cham ben phai
+      {
+      //Serial.println("phat hien va cham ben phai");
+      delaybackwardRight();
+      delaycheckphai();
+      }
+    else if (valueT == LOW && valueP== HIGH) // va cham ben trai
+    {
+      //Serial.println("phat hien va cham ben trai");
 
-if (valueT == HIGH && valueP==HIGH) // khong va cham
-{ 
-  if (valueL !=0 && valueM !=0 && valueR != 0)  //robot khong nam tren mat dat
-  {
-    stop();
-    if (error == true)
-    {
-      errorsound();
+      delaybackwardLeft();
+      delaychecktrai();
     }
   }
-  else if (valueL ==0 && valueM ==0 && valueR == 0)
-  {
-    forward();
-    error = true;
-  }
-  else if (valueL !=0 && valueM !=0 && valueR == 0 ) // ben trai va o giua roi
-  {  if (turnright == true)
-    {
-      delaybackward();
-      delayRight();
-    }
-    else {delaybackward(); delayLeft();}
-    //Serial.println("het chuong trinh 1-1-0");
-  }
-  else if (valueL ==0 && valueM !=0 && valueR == 0 ) // o giua roi
-  {
-    
-    delaybackward();
-    delayRight();
-    //Serial.println("het chuong trinh 0-1-0");
-  }
-  else if ( valueL !=0 && valueM ==0 && valueR == 0) // ben trai roi
-  {
-
-    if (turnright == true)
-    {
-      delaybackward();
-      delayRight();
-    }
-    else {delaybackward(); delayLeft();}
-    //Serial.println("het chuong trinh 1-0-0");
-  }
-  else if ( valueL !=0 && valueM ==0 && valueR != 0) // ben trai va phai roi
-  {
-    
-    delaybackward();
-    delayRight();
-    //Serial.println("het chuong trinh 1-0-1");
-  }
-  else if (valueL ==0 && valueM ==0 && valueR != 0 ) // ben phai roi
-  {
-    
-    if (turnright == true)
-    {
-      delaybackward();
-      delayRight();
-    }
-    else {delaybackward(); delayLeft();}
-    //Serial.println("het chuong trinh 0-0-1");
-  }
-  else if (valueL ==0 && valueM !=0 && valueR != 0 ) // ben phai o giua roi
-  
-  {
-    if (turnright == true)
-    {
-      delaybackward();
-      delayRight();
-    }
-    else {delaybackward(); delayLeft();}
-    //Serial.println("het chuong trinh 0-1-1");
-  }
-  else {
-  readsensorvalue();
-  }
-}
-else if (valueP == LOW && valueT==LOW) // va cham o giua
-{
-  //Serial.println("phat hien va cham o giua");
-  if (turnright == true)
-  {
-    delaybackward();
-    rotateRight();
-    turnright = false;
-  }
-  else {delaybackward(); rotateLeft(); turnright = true;}
-}
-else if (valueT == HIGH && valueP==LOW) // va cham ben phai
-  {
-  //Serial.println("phat hien va cham ben phai");
-  delaybackwardRight();
-  delaycheckphai();
-  }
-else if (valueT == LOW && valueP== HIGH) // va cham ben trai
-{
-  //Serial.println("phat hien va cham ben trai");
-
-  delaybackwardLeft();
-  delaychecktrai();
-}
 }
